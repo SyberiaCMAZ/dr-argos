@@ -1,0 +1,23 @@
+[project]
+name = "amazon"
+version = "0.0.1"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "camoufox>=0.4.11",
+    "crawlee[curl-impersonate,playwright]",
+    "dependency-injector>=4.48.2",
+    "httpx>=0.28.1",
+    "pydantic>=2.12.4",
+    "web-poet>=0.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+]
+
