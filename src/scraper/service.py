@@ -1,7 +1,7 @@
 from typing import Callable
 
 from crawlee import Request
-from crawlee.crawlers import ParselCrawler
+from crawlee.crawlers import ParselCrawler, PlaywrightCrawler
 from browserforge.headers import HeaderGenerator
 from src.argos.models import ArgosListing
 
@@ -21,14 +21,16 @@ class ScrapingService:
     def __init__(
         self,
         parsel_crawler_provider: Callable[..., ParselCrawler],
+        playwright_crawler_provider: Callable[..., PlaywrightCrawler],
     ):
         self._parsel_crawler_provider = parsel_crawler_provider
+        self._playwright_crawler_provider = playwright_crawler_provider
 
     async def hydrate_listings(
         self, listings: list[ArgosListing]
     ) -> list[ArgosListing]:
         # We split listing into correct crawler playwright/ parsel
-        crawler = self._parsel_crawler_provider()
+        crawler = self._playwright_crawler_provider()
         requests = [to_request(listing) for listing in listings]
         await crawler.run(
             requests=requests,

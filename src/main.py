@@ -8,22 +8,9 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-
-def filter_out_of_stock(listings):
-    out_of_stock_path = Path(__file__).parent.parent / "outofstock.json"
-    with out_of_stock_path.open("r") as f:
-        data = json.load(f)
-    seen_ids = set(l["listing_id"] for l in data)
-    for listing in listings:
-        if listing.listing_id in seen_ids:
-            continue
-        yield listing
-
-
 async def main() -> None:
-    data_path = Path(__file__).parent.parent / "parsed.txt"
+    data_path = Path(__file__).parent.parent / "response.txt"
     listings = list(get_listings(data_path))
-    # listings = list(filter_out_of_stock(listings))
     print("Total listings: {}".format(len(listings)))
     container = ScrapingContainer()
     service = container.scraping_service()
