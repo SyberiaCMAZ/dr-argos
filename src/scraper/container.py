@@ -11,11 +11,7 @@ from src.scraper.handlers.core import AutoRouter, discover_handlers
 
 
 def create_parsel_crawler(router: AutoRouter[Any]) -> ParselCrawler:
-    return ParselCrawler(
-        http_client=ImpitHttpClient(),
-        storage_client=MemoryStorageClient(),
-        request_handler=router,
-    )
+    return
 
 
 class ScrapingContainer(containers.DeclarativeContainer):
@@ -25,17 +21,24 @@ class ScrapingContainer(containers.DeclarativeContainer):
         ProxyConfiguration,
         proxy_urls=[],
     )
-    parsel_crawler = providers.Factory(
+    playwright_crawler = providers.Factory(
         PlaywrightCrawler,
         request_handler=router,
         browser_type="firefox",
         headless=False,
         storage_client=providers.Factory(MemoryStorageClient),
-        # http_client=providers.Factory(ImpitHttpClient),
-        # browser_pool=BrowserPool(plugins=[CamoufoxPlugin()]),
-        proxy_configuration=proxy_configuration,
+        # proxy_configuration=proxy_configuration,
+    )
+    _http_client = providers.Singleton(ImpitHttpClient)
+    parsel_crawler = providers.Factory(
+        ParselCrawler,
+        http_client=_http_client,
+        storage_client=MemoryStorageClient(),
+        request_handler=router,
+        # proxy_configuration=proxy_configuration,
     )
     scraping_service = providers.Singleton(
         ScrapingService,
         parsel_crawler_provider=parsel_crawler.provider,
+        playwright_crawler_provider=playwright_crawler.provider,
     )
