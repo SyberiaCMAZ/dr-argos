@@ -34,6 +34,3 @@ def get_listings(file_path: Path) -> Iterable[ArgosListing]:
                 region=listing["_source"]["marketplaceInstance"]["country"]["name"],
             ),
         )
-
-
-def save_listings(listings: list[ArgosListing], file_path: Path) -> None: ...

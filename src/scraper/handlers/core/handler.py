@@ -14,13 +14,17 @@ from crawlee.crawlers import PlaywrightCrawlingContext, ParselCrawlingContext
 from abc import ABC, abstractmethod
 
 from src.utils import walk_module, get_subclasses_from_module
+import logging
 
 TItem = TypeVar("TItem")
+
+logger = logging.getLogger(__name__)
 
 
 class BaseHandler[TContextType](ABC):
     name: str  # It MUST match argos response name
     page_class: type[WebPage[Any]]
+    proxy: bool = False
 
     @abstractmethod
     async def _build_poet_response(self, context: TContextType) -> HttpResponse: ...
@@ -30,7 +34,11 @@ class BaseHandler[TContextType](ABC):
         context: TContextType,
     ) -> BaseModel:
         page = self.page_class(response=await self._build_poet_response(context))
-        item = await ensure_awaitable(page.to_item())
+        try:
+            item = await ensure_awaitable(page.to_item())
+        except Exception as e:
+            logger.exception("Error while converting page to item", exc_info=e)
+            raise e
         item = cast(BaseModel, item)
         return item
 
