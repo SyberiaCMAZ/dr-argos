@@ -26,7 +26,7 @@ def get_listings(file_path: Path) -> Iterable[ArgosListing]:
     for listing in data["hits"]["hits"]:
         yield ArgosListing(
             listing_id=listing["_id"],
-            url=listing["_source"]["url"].split("?")[0],
+            url=listing["_source"]["url"],
             marketplace=Marketplace(
                 name=listing["_source"]["marketplaceInstance"]["marketplace"][
                     "name"

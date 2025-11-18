@@ -10,10 +10,6 @@ from src.scraper.service import ScrapingService
 from src.scraper.handlers.core import AutoRouter, discover_handlers
 
 
-def create_parsel_crawler(router: AutoRouter[Any]) -> ParselCrawler:
-    return
-
-
 class ScrapingContainer(containers.DeclarativeContainer):
     handlers_registry = providers.Resource(discover_handlers, "src.scraper.handlers")
     router = providers.Singleton(AutoRouter, handlers_registry)
@@ -33,7 +29,7 @@ class ScrapingContainer(containers.DeclarativeContainer):
     parsel_crawler = providers.Factory(
         ParselCrawler,
         http_client=_http_client,
-        storage_client=MemoryStorageClient(),
+        storage_client=providers.Factory(MemoryStorageClient),
         request_handler=router,
         # proxy_configuration=proxy_configuration,
     )
