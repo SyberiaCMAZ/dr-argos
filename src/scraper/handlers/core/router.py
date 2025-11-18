@@ -24,7 +24,7 @@ class AutoRouter(Generic[TCrawlingContext]):
             raise RuntimeError("No request label")
         handler_name, handler_func = context.request.label.split(".", 1)
         if handler_name not in self._handlers_registry:
+            context.request.no_retry = True
             raise RuntimeError(f"No handler matches label `{context.request.label}`")
-
         handler = getattr(self._handlers_registry[handler_name], handler_func)
         return await handler(context)

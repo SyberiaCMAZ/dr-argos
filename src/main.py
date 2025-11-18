@@ -1,4 +1,4 @@
-from src.argos.models import get_listings
+from src.argos.models import get_listings_from_service
 from pathlib import Path
 
 from src.scraper.container import ScrapingContainer
@@ -8,10 +8,14 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
+
 async def main() -> None:
-    data_path = Path(__file__).parent.parent / "response.json"
-    listings = list(get_listings(data_path))
+    data_path = Path(__file__).parent.parent / "listings_response.json"
+    listings = list(get_listings_from_service(data_path, marketplace="aliexpress"))
     print("Total listings: {}".format(len(listings)))
+    import pdb
+
+    pdb.set_trace()
     container = ScrapingContainer()
     service = container.scraping_service()
     listings = await service.hydrate_listings(listings)

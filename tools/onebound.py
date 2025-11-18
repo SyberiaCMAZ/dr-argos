@@ -9,17 +9,20 @@ from pathlib import Path
 import json
 import sys
 
+
 def add_to_blocked(listing_id: str):
-    with open("blocked.txt", 'a') as f:
+    with open("blocked.txt", "a") as f:
         f.write(f"{listing_id}\n")
+
 
 def is_blocked(listing_id: str) -> bool:
     try:
-        with open("blocked.txt", 'r') as f:
+        with open("blocked.txt", "r") as f:
             blocked_ids = f.read().splitlines()
             return listing_id in blocked_ids
     except FileNotFoundError:
         return False
+
 
 async def main():
     data_path = Path(__file__).parent / "response.json"
@@ -30,7 +33,7 @@ async def main():
             continue
         print(listing.url)
         try:
-            listing_external_id = re.findall(r'\/item\/(\d*)\.html', listing.url)[0]
+            listing_external_id = re.findall(r"\/item\/(\d*)\.html", listing.url)[0]
         except IndexError:
             add_to_blocked(listing.listing_id)
             continue
@@ -44,7 +47,7 @@ async def main():
             add_to_blocked(listing.listing_id)
             continue
         item = Listing(
-            username=json_data.get("item",{}).get("nick"),
+            username=json_data.get("item", {}).get("nick"),
             price=None,
             currency="CNY",
         )
@@ -52,11 +55,10 @@ async def main():
             add_to_blocked(listing.listing_id)
             continue
         print(item)
-        all_listings.append(
-            listing.model_dump() | item.model_dump()
-        )
+        all_listings.append(listing.model_dump() | item.model_dump())
     with open("listings.json", "w", encoding="utf-8") as f:
         json.dump(all_listings, f, ensure_ascii=False, indent=4)
+
 
 async def update_listings():
     with open("listings.json", "r", encoding="utf-8") as f:
@@ -64,6 +66,7 @@ async def update_listings():
     service = get_acf_service()
     listings = [ArgosListing(**item) for item in listings]
     await service.batch_update_listings(listings, 533)
+
 
 if __name__ == "__main__":
     args = sys.argv[1:]

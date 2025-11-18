@@ -1,5 +1,3 @@
-from typing import Any
-
 from crawlee.crawlers import ParselCrawler, PlaywrightCrawler
 from crawlee.http_clients import ImpitHttpClient
 from crawlee.proxy_configuration import ProxyConfiguration
