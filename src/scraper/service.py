@@ -12,7 +12,6 @@ def to_request(listing: ArgosListing) -> Request:
     return Request.from_url(
         url=listing.url,
         label=f"{listing.marketplace.name}.handler_init",
-        headers=header_gen.generate(browser="firefox"),
         user_data={"item": listing.model_dump()},
     )
 
@@ -30,7 +29,7 @@ class ScrapingService:
         self, listings: list[ArgosListing]
     ) -> list[ArgosListing]:
         # We split listing into correct crawler playwright/ parsel
-        crawler = self._playwright_crawler_provider()
+        crawler = self._parsel_crawler_provider()
         requests = [to_request(listing) for listing in listings]
         await crawler.run(
             requests=requests,
