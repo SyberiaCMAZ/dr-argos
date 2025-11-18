@@ -8,19 +8,17 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class MercadolibreDetailsPage(BaseDetailsPage):
+class AliexpressDetailsPage(BaseDetailsPage):
     def _json_ld(self) -> dict:
         json_text = self.xpath(
             '//script[@type="application/ld+json" and contains(text(), "Currency")]/text()'
         ).get()
-        json_data = json.loads(json_text)
+        json_data = json.loads(json_text)[0]
         return json_data
 
     @field()
     def price(self) -> str:
-        return self.xpath(
-            '//meta[@itemprop="price"]//following-sibling::span[2]/text()'
-        ).get()
+        return self._json_ld()["offers"]["price"]
 
     @field()
     def currency(self) -> str:
@@ -28,6 +26,4 @@ class MercadolibreDetailsPage(BaseDetailsPage):
 
     @field()
     def username(self) -> str:
-        return self.xpath(
-            '//div[@class="ui-pdp-seller__header"]//span[@class=""]/text()'
-        ).get()
+        return self.xpath('//span[contains(@class, "storeName")]/text()').get()
