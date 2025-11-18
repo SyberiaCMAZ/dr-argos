@@ -3,7 +3,7 @@ import re
 import requests
 import asyncio
 from src.argos.models import get_listings, ArgosListing
-from src.argos.service import AcfService
+from tools.utils import get_acf_service
 from src.scraper.pages.core import Listing
 from pathlib import Path
 import json
@@ -61,12 +61,7 @@ async def main():
 async def update_listings():
     with open("listings.json", "r", encoding="utf-8") as f:
         listings = json.load(f)
-    service = AcfService(
-        config={
-            "api_url": "https://argos.ebrand.com",
-            "api_token": ""
-        }
-    )
+    service = get_acf_service()
     listings = [ArgosListing(**item) for item in listings]
     await service.batch_update_listings(listings, 533)
 

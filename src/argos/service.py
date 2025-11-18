@@ -24,11 +24,12 @@ class AcfService:
         for hit in hits:
             source = hit["_source"]
             yield ArgosListing(
-                title=source["title"],
-                marketplace=source["marketplaceInstance"]["marketplace"]["name"],
+                marketplace=Marketplace(
+                    name=source["marketplaceInstance"]["marketplace"]["name"],
+                    region=source["marketplaceInstance"]["country"]["name"],
+                ),
                 listing_id=hit["_id"],
                 url=source["url"],
-                routing=routing,
             )
         iterations = (
             data["hits"]["total"] // 500 + 1
@@ -47,7 +48,8 @@ class AcfService:
                 source = hit["_source"]
                 yield ArgosListing(
                     marketplace=Marketplace(
-                        name=source["marketplaceInstance"]["marketplace"]["name"]
+                        name=source["marketplaceInstance"]["marketplace"]["name"],
+                        region=source["marketplaceInstance"]["country"]["name"],
                     ),
                     listing_id=hit["_id"],
                     url=source["url"],
@@ -62,7 +64,7 @@ class AcfService:
         limit: int = 500,
     ) -> Response:
         response = await self._http_client.post(
-            f"https://{self._api_url}/elasticsearch/marketplace/_search",
+            f"{self._api_url}/elasticsearch/marketplace/_search",
             params={
                 "routing": routing,
             },
@@ -115,7 +117,7 @@ class AcfService:
                     "includes": [
                         "url",
                         "title",
-                        "marketplaceInstance.marketplace",
+                        "marketplaceInstance",
                     ],
                 },
             },
@@ -150,7 +152,7 @@ class AcfService:
             print("No listings to update.")
             return
         response = httpx.put(
-            f"https://argos.ebrand.com/v1/marketplace/{routing}/items",
+            f"{self._api_url}/v1/marketplace/{routing}/items",
             headers={
                 "Authorization": self._token,
                 "Content-Type": "application/json",

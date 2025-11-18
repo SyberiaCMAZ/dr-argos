@@ -9,7 +9,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 async def main() -> None:
-    data_path = Path(__file__).parent.parent / "response.txt"
+    data_path = Path(__file__).parent.parent / "response.json"
     listings = list(get_listings(data_path))
     print("Total listings: {}".format(len(listings)))
     container = ScrapingContainer()

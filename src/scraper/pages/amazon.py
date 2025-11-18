@@ -17,7 +17,7 @@ class AmazonDetailsPage(BaseDetailsPage):
         ).get()
 
     @field()
-    def currency(self):
+    def currency(self) -> str:
         return self.xpath(
             '//div[@id="nav-flyout-icp"]//span[@class="nav-text" and .//a[@class="icp-flyout-change"]]//span[@dir="ltr"][2]/text()'
         ).get()
