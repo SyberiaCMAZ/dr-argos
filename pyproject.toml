@@ -21,3 +21,15 @@ dev = [
     "mypy>=1.18.2",
 ]
 
+[tool.poe.tasks]
+format = ["_format_ruff_check", "_format_ruff_format"]
+_format_ruff_check = "uv run ruff check --fix-only ."
+_format_ruff_format = "uv run ruff format ."
+
+check = ["_check_ruff_check", "_check_ruff_format", "_check_mypy"]
+_check_ruff_check = "uv run ruff check ."
+_check_ruff_format = "uv run ruff format --check ."
+_check_mypy = "uv run mypy ."
+
+fc = ["format", "_check_mypy"]
+
