@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def main() -> None:
     data_path = Path(__file__).parent.parent / "listings_response.json"
-    listings = list(get_listings_from_service(data_path, marketplace="aliexpress"))
+    listings = list(get_listings_from_service(data_path, marketplace="auction"))
     print("Total listings: {}".format(len(listings)))
     import pdb
 
