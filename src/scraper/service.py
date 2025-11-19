@@ -13,6 +13,7 @@ def to_request(listing: ArgosListing) -> Request:
         url=listing.url,
         label=f"{listing.marketplace.name}.handler_init",
         user_data={"item": listing.model_dump()},
+        # headers=header_gen.generate()
     )
 
 

@@ -12,6 +12,7 @@ dependencies = [
     "crawlee[curl-impersonate,playwright]",
     "dependency-injector>=4.48.2",
     "httpx>=0.28.1",
+    "price-parser>=0.5.0",
     "pydantic>=2.12.4",
     "web-poet>=0.20.0",
 ]

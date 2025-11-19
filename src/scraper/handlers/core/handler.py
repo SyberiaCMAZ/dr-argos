@@ -10,7 +10,11 @@ from web_poet import (
 )
 from web_poet.utils import ensure_awaitable
 
-from crawlee.crawlers import PlaywrightCrawlingContext, ParselCrawlingContext
+from crawlee.crawlers import (
+    PlaywrightCrawlingContext,
+    ParselCrawlingContext,
+    BasicCrawlingContext,
+)
 from abc import ABC, abstractmethod
 
 from src.utils import walk_module, get_subclasses_from_module
@@ -21,7 +25,7 @@ TItem = TypeVar("TItem")
 logger = logging.getLogger(__name__)
 
 
-class BaseHandler[TContextType](ABC):
+class BaseHandler[TContextType: BasicCrawlingContext](ABC):
     name: str  # It MUST match argos response name
     page_class: type[WebPage[Any]]
     proxy: bool = False
@@ -44,6 +48,7 @@ class BaseHandler[TContextType](ABC):
 
     async def _push_item(self, context: TContextType) -> None:
         old_item = context.request.user_data.get("item", {})
+        old_item = cast(dict[str, Any], old_item)
         if not old_item:
             context.log.warning("Old item not found!")
         new_item = await self._context_to_item(context)
