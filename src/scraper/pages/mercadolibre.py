@@ -1,7 +1,7 @@
 import json
 
 from src.scraper.pages.core import BaseDetailsPage
-from web_poet import field
+from web_poet import field, cached_method
 import logging
 
 
@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class MercadolibreDetailsPage(BaseDetailsPage):
+    @cached_method
     def _json_ld(self) -> dict:
         json_text = self.xpath(
             '//script[@type="application/ld+json" and contains(text(), "Currency")]/text()'

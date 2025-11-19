@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 
 async def main() -> None:
     data_path = Path(__file__).parent.parent / "listings_response.json"
-    listings = list(get_listings_from_service(data_path, marketplace="pigu"))
+    listings = list(get_listings_from_service(data_path, marketplace="220"))
     print("Total listings: {}".format(len(listings)))
     container = ScrapingContainer()
     service = container.scraping_service()

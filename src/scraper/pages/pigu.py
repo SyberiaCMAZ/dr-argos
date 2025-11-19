@@ -24,4 +24,5 @@ class PiguDetailsPage(BaseDetailsPage):
     def username(self) -> str:
         return self.xpath(
             '//a[contains(@gtm-t-l, "product_seller_summary")]/span/text()'
+            '| //a[contains(@gtm-tracker-link, "product_seller_summary")]/span/text()'
         ).get()
