@@ -48,7 +48,9 @@ class AcfService:
                 source = hit["_source"]
                 yield ArgosListing(
                     marketplace=Marketplace(
-                        name=source["marketplaceInstance"]["marketplace"]["name"],
+                        name=source["marketplaceInstance"]["marketplace"][
+                            "name"
+                        ].lower(),
                         region=source["marketplaceInstance"]["country"]["name"],
                     ),
                     listing_id=hit["_id"],

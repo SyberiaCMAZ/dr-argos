@@ -11,11 +11,8 @@ logging.basicConfig(level=logging.INFO)
 
 async def main() -> None:
     data_path = Path(__file__).parent.parent / "listings_response.json"
-    listings = list(get_listings_from_service(data_path, marketplace="auction"))
+    listings = list(get_listings_from_service(data_path, marketplace="pigu"))
     print("Total listings: {}".format(len(listings)))
-    import pdb
-
-    pdb.set_trace()
     container = ScrapingContainer()
     service = container.scraping_service()
     listings = await service.hydrate_listings(listings)
